@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
+import LoginButton from "./components/LoginButton";
+//import LogoutButton from "./components/LogoutButton";
+import FileUpload from "./components/FileUpload";
 import './App.css';
 
 class App extends Component {
@@ -8,8 +11,9 @@ class App extends Component {
     this.state = {
       user: null
     };
-    this.handleAuth = this.handleAuth.bind(this);
-    this.handleLogout = this.handleLogout.bind(this);
+
+    this.handleAuth = this._handleAuth.bind(this);
+    this.handleLogout = this._handleLogout.bind(this);
   }
 
   componentWillMount (){
@@ -20,7 +24,7 @@ class App extends Component {
     });
   }
 
-  handleAuth () {
+  _handleAuth () {
     const provider = new firebase.auth.GoogleAuthProvider();
 
     firebase.auth().signInWithPopup(provider)
@@ -28,7 +32,7 @@ class App extends Component {
       .catch(error => console.log(`Error ${error.code}: ${error.message}`))
   }
 
-  handleLogout () {
+  _handleLogout () {
 
     firebase.auth().signOut()
       .then(result => console.log(`${result.user.email} ha cerrado sesión`))
@@ -39,26 +43,35 @@ class App extends Component {
     if (this.state.user) {
       return (
         <div>
-          <img src={this.state.user.photoURL} alt={this.state.user.displayName} />
-          <p>Hola {this.state.user.displayName}!</p>
-          <button onClick={this.handleLogout}>Cerrar Sesión</button>
+          <img class="circle img-responsive z-depth-2" src={this.state.user.photoURL} alt={this.state.user.displayName} />
+          <h5>Bienvenido</h5>
+          <p>{this.state.user.displayName}</p>
+          <button class="waves-effect waves-light red btn-large" onClick={this.handleLogout}>Cerrar Sesión</button>
         </div>
       );
     }else{
       return (
-        <button onClick={this.handleAuth}>Login con Google</button>
+        <button class="waves-effect waves-light red btn-large" onClick={this.handleAuth}>Login con Google</button>
       )
     }
   }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <h1 className="App-title">CloneGram</h1>
-        </header>
-        <p className="App-intro">
-          { this.renderLoginButton() }
-        </p>
+      <div class="login">
+        <nav class="grey darken-4">
+          <div class="nav-wrapper">
+            <a href="javascript:;" class="brand-logo center">Clonegram</a>
+          </div>
+        </nav>
+        <div class="container">
+          <div class="row">
+            <div class="card-panel center-align">
+              { this.renderLoginButton() }
+              <FileUpload />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
